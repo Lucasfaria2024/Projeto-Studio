@@ -1,0 +1,964 @@
+
+:root {
+    --primary-color: #FF6600; 
+    --secondary-color: #4B2E2E; 
+    --light-bg-color: #F8F4E3; 
+    --card-bg-color: #FFDAB9; /* Cor de card clara */
+    --text-color: #4B2E2E; /* Cor de texto padrão */
+    --modal-bg-color: #FDF9EC; /* Fundo do modal */
+    --success-color: #00C853; /* Verde para sucesso */
+    --error-color: #D50000; /* Vermelho para erro */
+    --border-color: #ccc; /* Cor de borda padrão */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Cor de sombra */
+    --font-family-poppins: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-family-poppins);
+    background-color: var(--light-bg-color);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
+    border: 10px;
+    border-radius: 10px;
+}
+
+h1, h2, h3 {
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+.main-nav {
+    background-color: var(--secondary-color);
+    padding: 15px 0;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    border: 10px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.header {
+    background-color: var(--card-bg-color);
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.header h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Dashboard Grid Layout (para index e admin) */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-bottom: 30px;
+}
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Cards */
+.card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Garante que os cards ocupem a altura disponível */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.block-title {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--secondary-color);
+}
+
+/* Botões */
+.btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none; /* Para botões que são links */
+    display: inline-block; /* Para que padding e margin funcionem bem */
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #E65C00; /* Laranja mais escuro no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #6A4E4E; /* Marrom mais claro no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-expand {
+    font-size: 0.9em;
+    padding: 8px 15px;
+    background-color: #eee;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-expand:hover {
+    background-color: #ddd;
+}
+
+.btn-full-width {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Listas de Alunos e Ranking */
+.student-list-header, .ranking-list-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+.student-list > div, .ranking-list > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.student-list > div:last-child, .ranking-list > div:last-child {
+    border-bottom: none;
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Fade effect */
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.modal.visible { /* Use .modal.visible para controlar a visibilidade */
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--modal-bg-color);
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    color: var(--text-color);
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: calc(100% - 20px); /* Ajusta para padding */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    color: var(--text-color);
+    background-color: #fff;
+}
+
+.form-group input[type="text"]::placeholder {
+    color: #999;
+}
+
+
+/* Ranking Display Options (no modal) */
+.ranking-display-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ranking-display-options .btn-secondary {
+    background-color: #ddd;
+    color: var(--text-color);
+}
+
+.ranking-display-options .btn-secondary.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Ranking Cards Display */
+.ranking-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.ranking-card {
+    background-color: var(--card-bg-color);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ranking-card .rank-number {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.ranking-card .player-name {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.ranking-card .player-xp, .ranking-card .player-level {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.ranking-card .player-achievements {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.ranking-card .player-achievements img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+
+
+/* Estilos específicos do Jogo (games.html) */
+
+/* Animações */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 102, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); }
+}
+@keyframes flash-red {
+    0%, 100% { background-color: var(--error-color); color: white; }
+    50% { background-color: #FFFFFF; color: var(--text-color); }
+}
+@keyframes flash-green {
+    0%, 100% { background-color: var(--success-color); color: white; }
+    50% { background-color: #FFFFFF; color: var(--text-color); }
+}
+@keyframes fast-flash-green {
+    0%, 100% { background-color: var(--success-color); color: white; }
+    25% { background-color: #FFFFFF; color: var(--text-color); }
+    50% { background-color: var(--success-color); color: white; }
+    75% { background-color: #FFFFFF; color: var(--text-color); }
+}
+
+.pulse-animation {
+    animation: pulse 1.5s infinite;
+}
+
+.flash-red {
+    animation: flash-red 0.5s ease-in-out;
+}
+
+.flash-green {
+    animation: flash-green 0.5s ease-in-out;
+}
+
+.fast-flash-green {
+    animation: fast-flash-green 0.4s ease-in-out;
+}
+
+
+.container-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px); /* Ajuste para a altura da nav e um pouco de respiro */
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header-game {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header-game div {
+    background-color: var(--card-bg-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-grow: 1;
+    justify-content: center;
+    min-width: 120px;
+    color: var(--text-color);
+}
+
+.header-game input[type="text"] {
+    flex-grow: 1;
+    min-width: 150px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-align: center;
+    color: var(--text-color);
+    background-color: white;
+}
+
+.header-game input[type="text"]::placeholder {
+    color: #888;
+}
+
+
+.note-display {
+    font-size: 2.8rem; /* Aumentado para mais destaque */
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    background-color: var(--card-bg-color);
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    min-width: 100px;
+    text-align: center;
+}
+
+.piano-keyboard {
+    display: flex;
+    position: relative;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    overflow-x: auto;
+    min-width: 320px;
+    max-width: 100%;
+    user-select: none; /* Impede seleção de texto nas teclas */
+}
+
+.white-key {
+    width: 60px;
+    height: 180px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 5px 5px;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+    position: relative;
+    margin-right: -1px;
+    cursor: pointer;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: background-color 0.1s ease, box-shadow 0.1s ease;
+}
+
+.white-key:active {
+    background-color: #eee;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+.black-key {
+    width: 38px; /* Ligeiramente maior para melhor toque */
+    height: 110px;
+    background-color: #000;
+    border-radius: 0 0 3px 3px;
+    position: absolute;
+    margin-left: -19px; /* metade da largura da black key */
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: inset 0 -3px 8px rgba(255,255,255,0.2);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    font-size: 0.7em;
+    font-weight: bold;
+    color: #fff;
+    transition: background-color 0.1s ease, box-shadow 0.1s ease;
+}
+
+.black-key:active {
+    background-color: #333;
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.2);
+}
+
+/* Ajustes de posicionamento para teclas pretas */
+.black-key:nth-child(2) { left: 42px; } /* Dó# */
+.black-key:nth-child(3) { left: 102px; } /* Ré# */
+.black-key:nth-child(5) { left: 222px; } /* Fá# */
+.black-key:nth-child(6) { left: 282px; } /* Sol# */
+.black-key:nth-child(7) { left: 342px; } /* Lá# */
+
+
+.key-label {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.85em; /* Ligeiramente maior */
+    font-weight: bold;
+    color: var(--primary-color);
+    pointer-events: none; /* Garante que o clique passe para a tecla */
+}
+
+/* Botões de notas (para mobile/touch) */
+.note-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px; /* Espaçamento maior */
+    width: 100%;
+    max-width: 500px; /* Ajuste max-width */
+    margin-top: 25px;
+}
+
+.note-button {
+    padding: 15px 10px; /* Mais padding */
+    border-radius: 8px;
+    font-size: 1.1em; /* Fonte maior */
+    font-weight: 700;
+    transition: transform 0.1s ease-out, background-color 0.2s ease;
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.note-button:hover {
+    background-color: #E65C00;
+}
+
+.note-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Estilos para a página de Perfil */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding-bottom: 30px;
+}
+
+.profile-header {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+    margin: 0 auto 15px;
+    display: block;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.profile-name {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.profile-xp-level {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.profile-section-title {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.achievement-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.achievement-card:hover {
+    transform: translateY(-5px);
+}
+
+.achievement-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid #ddd;
+}
+
+.achievement-card.earned img {
+    border-color: var(--success-color);
+    box-shadow: 0 0 8px rgba(0, 200, 83, 0.5);
+}
+
+.achievement-card h3 {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.achievement-card p {
+    font-size: 0.85em;
+    color: #666;
+    margin: 0;
+}
+
+.achievement-locked {
+    filter: grayscale(100%) brightness(50%);
+    opacity: 0.6;
+
+
+/* Responsividade Geral */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    .nav-list {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    .nav-link {
+        width: 80%;
+        text-align: center;
+    }
+    .header {
+        padding: 25px 15px;
+    }
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    .card {
+        padding: 20px;
+    }
+    .block-title {
+        font-size: 1.3rem;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    .ranking-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .container-game {
+        padding: 10px;
+    }
+    .piano-keyboard {
+        transform: scale(0.8);
+        transform-origin: center;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+    .white-key {
+        width: 50px;
+        height: 150px;
+    }
+    .black-key {
+        width: 30px;
+        height: 90px;
+        margin-left: -15px;
+    }
+    /* Reajuste posições das teclas pretas para a escala */
+    .black-key:nth-child(2) { left: calc(30px * 0.8); } /* Dó# */
+    .black-key:nth-child(3) { left: calc(102px * 0.8); } /* Ré# */
+    .black-key:nth-child(5) { left: calc(222px * 0.8); } /* Fá# */
+    .black-key:nth-child(6) { left: calc(282px * 0.8); } /* Sol# */
+    .black-key:nth-child(7) { left: calc(342px * 0.8); } /* Lá# */
+
+    .note-buttons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .header-game div, .header-game input, .header-game button {
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .note-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+    .piano-keyboard {
+        transform: scale(0.7); /* Ainda menor para telas muito pequenas */
+    }
+    /* Reajuste posições das teclas pretas para a escala */
+    .black-key:nth-child(2) { left: calc(42px * 0.7); } /* Dó# */
+    .black-key:nth-child(3) { left: calc(102px * 0.7); } /* Ré# */
+    .black-key:nth-child(5) { left: calc(222px * 0.7); } /* Fá# */
+    .black-key:nth-child(6) { left: calc(282px * 0.7); } /* Sol# */
+    .black-key:nth-child(7) { left: calc(342px * 0.7); } /* Lá# */
+}
+
+/* Portrait orientation for very tall/narrow screens (mobile specific) */
+@media (max-height: 700px) and (orientation: portrait) {
+    .container-game {
+        flex-direction: column; /* Manter a coluna, mas ajustar espaçamento */
+        justify-content: flex-start;
+        padding-top: 10px;
+    }
+    .header-game {
+        margin-bottom: 10px;
+    }
+    .note-display {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        padding: 10px 20px;
+    }
+    .piano-keyboard {
+        transform: scale(0.65); /* Reduzir ainda mais o teclado */
+        transform-origin: center top;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    /* Reajuste posições das teclas pretas para a escala */
+    .black-key:nth-child(2) { left: calc(42px * 0.65); } /* Dó# */
+    .black-key:nth-child(3) { left: calc(102px * 0.65); } /* Ré# */
+    .black-key:nth-child(5) { left: calc(222px * 0.65); } /* Fá# */
+    .black-key:nth-child(6) { left: calc(282px * 0.65); } /* Sol# */
+    .black-key:nth-child(7) { left: calc(342px * 0.65); } /* Lá# */
+
+    .note-buttons-grid {
+        flex-grow: 1;
+        max-width: 300px; /* Limita a largura para caber ao lado do teclado se layout mudar */
+        margin-top: 0;
+        grid-template-columns: repeat(2, 1fr); /* Tentar 2 colunas */
+    }
+}
+
+/* Footer (opcional, se você quiser adicionar um) */
+.footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 0.9em;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+  .ranking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ranking-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .ranking-item.expanded {
+        margin-bottom: 15px;
+        z-index: 2;
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    
+    .ranking-details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        background: #f8f9fa;
+        margin: 0 -15px -12px -15px;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .ranking-item.expanded .ranking-details {
+        max-height: 200px;
+        padding: 15px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .rank-position {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        min-width: 30px;
+        text-align: center;
+    }
+    
+    .student-info {
+        flex-grow: 1;
+        margin: 0 15px;
+    }
+    
+    .student-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    
+    .student-stats {
+        display: flex;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+    
+    .student-xp {
+        margin-right: 15px;
+    }
+    
+    .student-level {
+        font-weight: 600;
+    }
+    
+    .expand-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .ranking-item.expanded .expand-icon {
+        transform: rotate(180deg);
+    }
+    
+    .achievement-badges {
+        display: flex;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .achievement-badge {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        margin-right: 5px;
+        background: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+    }
+    
+    .progress-bar {
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: var(--primary-color);
+        border-radius: 3px;
+    }

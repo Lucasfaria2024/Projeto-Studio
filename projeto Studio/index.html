@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Acorde - Mural da Semana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="container">
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link active">Início</a></li>
+                <li><a href="profiles.html" class="nav-link">Perfis</a></li>
+                <li><a href="games.html" class="nav-link">Jogos</a></li>
+                <li><a href="admin.html" class="nav-link">Admin</a></li>
+            </ul>
+        </nav>
+
+        <header class="header">
+            <h1 id="welcomeMessage">Bem-vindo, Aluno</h1>
+        </header>
+
+        <main class="dashboard-grid">
+            <section class="left-column">
+                <div class="card students-block">
+                    <div class="card-header">
+                        <h2 class="block-title">Alunos</h2>
+                        <a href="admin.html" class="btn btn-expand">Gerenciar Alunos</a>
+                    </div>
+                    <div class="student-list-header">
+                        <span>Nome</span>
+                        <span>XP</span>
+                        <span>Nível</span>
+                       </div>
+                    <div id="studentList">
+                        </div>
+                </div>
+            </section>
+
+            <section class="right-column">
+                <div class="card ranking-block">
+                    <div class="card-header">
+                        <h2 class="block-title">Ranking Top 5</h2>
+                        <button class="btn btn-expand" id="openFullRankingModal">Ver Ranking Completo</button>
+                    </div>
+                    <div id="rankingList" class="ranking-list">
+                        </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="rankingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeRankingModal">&times;</span>
+            <h2 class="modal-title">Ranking de Alunos</h2>
+            <div class="ranking-display-options">
+                <button class="btn btn-secondary active" id="showRankingTableBtn" data-view="table">Tabela</button>
+                <button class="btn btn-secondary" id="showRankingCardsBtn" data-view="cards">Cards</button>
+            </div>
+            <div id="expandedRankingDisplay">
+                </div>
+        </div>
+    </div>
+    
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeAvatarModal">&times;</span>
+            <h2 class="modal-title">Editar Avatar do Aluno</h2>
+            <form id="avatarForm">
+                <input type="hidden" id="editAvatarStudentId"> <div class="form-group">
+                    <label for="avatarUrl">URL do Avatar</label>
+                    <input type="text" id="avatarUrl" placeholder="Cole a URL da imagem aqui">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full-width">Salvar Avatar</button>
+            </form>
+        </div>
+    </div>
+     
+    <script src="script.js"></script>
+</body>
+</html>
