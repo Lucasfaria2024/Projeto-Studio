@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Acorde - Painel de Administração</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link">Início</a></li>
+                <li><a href="profiles.html" class="nav-link">Perfil</a></li>
+                <li><a href="games.html" class="nav-link">Jogos</a></li>
+                <li><a href="admin.html" class="nav-link active">Admin</a></li>
+            </ul>
+        </nav>
+
+        <header class="header">
+            <h1>Painel de Administração</h1>
+        </header>
+
+<section class="left-column">
+    <div class="card">
+        <h2 class="block-title">Gerenciamento de Alunos</h2>
+        <button class="btn btn-primary" id="openAddStudentModal">Cadastrar Novo Aluno</button>
+    </div>
+
+    <div class="card">
+        <h2 class="block-title">Configurações de Níveis</h2>
+        <p>Defina os pontos de XP para cada nível e as cores.</p>
+        <button class="btn btn-secondary" id="openLevelsModal">Editar Níveis</button>
+    </div>
+</section>
+
+<section class="right-column">
+    <div class="card">
+        <h2 class="block-title">Gerenciamento de Conquistas</h2>
+        <p>Adicione, edite ou remova conquistas.</p>
+        <button class="btn btn-secondary" id="openAchievementsModal">Gerenciar Conquistas</button>
+    </div>
+
+    <div class="card">
+        <h2 class="block-title">Estatísticas Gerais</h2>
+        <p>Visualizar dados gerais do sistema.</p>
+        <button class="btn btn-secondary" id="openStatsModal">Ver Relatórios</button>
+    </div>
+</section>
+
+<div id="levelsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="closeLevelsModal">&times;</span>
+        <h2 class="modal-title">Gerenciamento de Níveis</h2>
+        
+        <div class="form-group">
+            <label for="levelCount">Número de Níveis:</label>
+            <input type="number" id="levelCount" min="1" max="100" value="10">
+        </div>
+        
+        <button class="btn btn-primary" id="generateLevels">Gerar Tabela de Níveis</button>
+        
+        <div id="levelsTableContainer" style="margin-top: 20px; display: none;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nível</th>
+                        <th>XP Necessário</th>
+                        <th>Cor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="levelsTableBody">
+                </tbody>
+            </table>
+            <button class="btn btn-primary btn-full-width" id="saveLevels">Salvar Configurações de Níveis</button>
+        </div>
+    </div>
+</div>
+
+<div id="achievementsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="closeAchievementsModal">&times;</span>
+        <h2 class="modal-title">Gerenciamento de Conquistas</h2>
+        
+        <form id="addAchievementForm">
+            <div class="form-group">
+                <label for="achievementName">Nome da Conquista</label>
+                <input type="text" id="achievementName" required>
+            </div>
+            <div class="form-group">
+                <label for="achievementDesc">Descrição</label>
+                <textarea id="achievementDesc" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="achievementIcon">Ícone (URL ou código)</label>
+                <input type="text" id="achievementIcon">
+            </div>
+            <div class="form-group">
+                <label for="achievementXP">XP de Recompensa</label>
+                <input type="number" id="achievementXP" min="0" value="10" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar Conquista</button>
+        </form>
+        
+        <h3 style="margin-top: 30px;">Conquistas Existentes</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>XP</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="achievementsTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="statsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="closeStatsModal">&times;</span>
+        <h2 class="modal-title">Estatísticas do Sistema</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total de Alunos</div>
+                <div class="stat-value" id="totalStudents">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total de Conquistas</div>
+                <div class="stat-value" id="totalAchievements">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">XP Total</div>
+                <div class="stat-value" id="totalXP">0</div>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 30px;">Distribuição de Níveis</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nível</th>
+                    <th>Quantidade de Alunos</th>
+                    <th>Percentual</th>
+                </tr>
+            </thead>
+            <tbody id="levelsDistributionBody">
+            </tbody>
+        </table>
+        
+        <h3 style="margin-top: 30px;">Conquistas Mais Populares</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Conquista</th>
+                    <th>Alcançada por</th>
+                    <th>Taxa de Conquista</th>
+                </tr>
+            </thead>
+            <tbody id="popularAchievementsBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeAddStudentModal">&times;</span>
+            <h2 class="modal-title">Cadastrar Novo Aluno</h2>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label for="studentName">Nome do Aluno</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentXP">Pontos de XP Iniciais</label>
+                    <input type="number" id="studentXP" value="0" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentAvatar">URL do Avatar (Opcional)</label>
+                    <input type="text" id="studentAvatar">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full-width">Adicionar Aluno</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    </body>
+</html>

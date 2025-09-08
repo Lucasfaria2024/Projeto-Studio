@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <title>Studio Acorde - Jogos da Semana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <style>
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 102, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); }
+        }
+        @keyframes flash-red {
+            0%, 100% { background-color: #D50000; color: white; }
+            50% { background-color: #FFFFFF; color: #4B2E2E; }
+        }
+        @keyframes flash-green {
+            0%, 100% { background-color: #00C853; color: white; }
+            50% { background-color: #FFFFFF; color: #4B2E2E; }
+        }
+        @keyframes fast-flash-green {
+            0%, 100% { background-color: #00C853; color: white; }
+            25% { background-color: #FFFFFF; color: #4B2E2E; }
+            50% { background-color: #00C853; color: white; }
+            75% { background-color: #FFFFFF; color: #4B2E2E; }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F4E3; 
+            color: #4B2E2E; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 60px); 
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-game {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-game div {
+            background-color: #FFDAB9; 
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-grow: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .note-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FF6600; 
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .piano-keyboard {
+            display: flex;
+            position: relative;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            min-width: 320px; 
+            max-width: 100%;
+        }
+
+        .white-key {
+            width: 60px;
+            height: 180px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0 0 5px 5px;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+            position: relative;
+            margin-right: -1px;
+            cursor: pointer;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #4B2E2E;
+        }
+
+        .black-key {
+            width: 36px;
+            height: 110px;
+            background-color: #000;
+            border-radius: 0 0 3px 3px;
+            position: absolute;
+            margin-left: -18px; 
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: inset 0 -3px 8px rgba(255,255,255,0.2);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .black-key:nth-child(2) { left: 42px; } /* Dó# */
+        .black-key:nth-child(3) { left: 102px; } /* Ré# */
+        .black-key:nth-child(5) { left: 222px; } /* Fá# */
+        .black-key:nth-child(6) { left: 282px; } /* Sol# */
+        .black-key:nth-child(7) { left: 342px; } /* Lá# */
+
+        .note-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 400px; 
+            margin-top: 20px;
+        }
+
+        .note-button {
+            transition: transform 0.1s ease-out;
+        }
+        .note-button:active {
+            transform: scale(0.95);
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden; 
+            opacity: 0; 
+            transition: visibility 0s, opacity 0.3s ease;
+        }
+        .modal:not(.hidden) { 
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #FDF9EC; 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            color: #4B2E2E;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #FF6600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #FF6600;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E65C00;
+        }
+        .btn-secondary {
+            background-color: #4B2E2E;
+            color: white;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #6A4E4E;
+        }
+
+
+        .ranking-list div {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1em;
+        }
+        .ranking-list div:last-child {
+            border-bottom: none;
+        }
+
+        .key-label {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #FF6600;
+        }
+
+        @media (max-width: 600px) {
+            .piano-keyboard {
+                transform: scale(0.8);
+                transform-origin: center;
+                margin-bottom: 20px;
+            }
+            .note-buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 400px) {
+            .note-buttons-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-game div {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+        @media (max-height: 700px) and (orientation: portrait) {
+            .container-game {
+                flex-direction: row; 
+                flex-wrap: wrap;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            .header-game {
+                width: 100%;
+                justify-content: center;
+            }
+            .note-display {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .piano-keyboard {
+                transform: scale(0.6);
+                transform-origin: top left;
+                flex-shrink: 0;
+                margin-right: 20px;
+            }
+            .note-buttons-grid {
+                flex-grow: 1;
+                max-width: none;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link">Início</a></li>
+                <li><a href="profiles.html" class="nav-link">Perfil</a></li>
+                <li><a href="games.html" class="nav-link active">Jogos</a></li>
+                <li><a href="admin.html" class="nav-link">Admin</a></li>
+            </ul>
+        </nav>
+
+        <header class="header">
+            <h1>Toque Certo - Jogo de Piano</h1>
+        </header>
+
+        <main class="container-game">
+            <div class="header-game">
+                <div>Tempo: <span id="timer">60</span>s</div>
+                <div>Pontuação: <span id="score">0</span></div>
+                <input type="text" id="playerName" placeholder="Seu Nome"
+                       class="p-2 border border-gray-300 rounded-lg text-center text-[#4B2E2E] placeholder-[#4B2E2E] flex-grow" />
+                <button id="startGame"
+                        class="bg-gradient-to-b from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-2 px-4 rounded-lg font-bold transition shadow-md flex-grow">
+                    Começar Jogo
+                </button>
+            </div>
+
+            <div id="currentNote" class="note-display">?</div>
+
+            <div class="piano-keyboard">
+                <div class="white-key" id="do" data-note="Dó"></div>
+                <div class="black-key" id="do#" data-note="Dó♯"></div>
+                <div class="white-key" id="re" data-note="Ré"></div>
+                <div class="black-key" id="re#" data-note="Ré♯"></div>
+                <div class="white-key" id="mi" data-note="Mi"></div>
+                <div class="white-key" id="fa" data-note="Fá"></div>
+                <div class="black-key" id="fa#" data-note="Fá♯"></div>
+                <div class="white-key" id="sol" data-note="Sol"></div>
+                <div class="black-key" id="sol#" data-note="Sol♯"></div>
+                <div class="white-key" id="la" data-note="Lá"></div>
+                <div class="black-key" id="la#" data-note="Lá♯"></div>
+                <div class="white-key" id="si" data-note="Si"></div>
+            </div>
+
+            <div class="note-buttons-grid grid grid-cols-3 gap-3 w-full max-w-lg mt-8" id="noteButtons">
+                </div>
+        </main>
+
+        <div id="gameOverModal" class="modal hidden">
+            <div class="modal-content">
+                <h2 class="text-3xl font-bold text-[#4B2E2E] mb-4">Fim de Jogo!</h2>
+                <p class="text-xl mb-2">Jogador: <span id="finalPlayerName" class="font-semibold"></span></p>
+                <p class="text-xl mb-2">Sua Pontuação Final: <span id="finalScore" class="font-semibold"></span></p>
+                <p class="text-xl mb-4">Tempo Jogado: <span id="finalTime" class="font-semibold"></span>s</p>
+                <button id="playAgain"
+                        class="btn btn-primary w-full mb-3">Jogar Novamente</button>
+                <button id="viewRankingFromModal"
+                        class="btn btn-secondary w-full mb-3">Ver Ranking</button>
+                <button id="backToStart"
+                        class="btn btn-secondary w-full">Voltar ao Início</button>
+            </div>
+        </div>
+
+        <div id="rankingModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button" id="closeRanking">&times;</span>
+                <h2 class="text-3xl font-bold text-[#4B2E2E] mb-4">Ranking</h2>
+                <div id="rankingList" class="ranking-list">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameState = {
+            isPlaying: false,
+            timer: 60,
+            score: 0,
+            currentNote: null,
+            timerInterval: null,
+            highlightedKey: null,
+            playerName: '',
+            ranking: JSON.parse(localStorage.getItem('pianoGameRanking')) || [],
+            playedNotes: [],
+            currentPointsPerCorrect: 100
+        };
+
+        const notes = [
+            { name: 'Dó', id: 'do', isBlack: false },
+            { name: 'Dó♯', id: 'do#', isBlack: true },
+            { name: 'Ré', id: 're', isBlack: false },
+            { name: 'Ré♯', id: 're#', isBlack: true },
+            { name: 'Mi', id: 'mi', isBlack: false },
+            { name: 'Fá', id: 'fa', isBlack: false },
+            { name: 'Fá♯', id: 'fa#', isBlack: true },
+            { name: 'Sol', id: 'sol', isBlack: false },
+            { name: 'Sol♯', id: 'sol#', isBlack: true },
+            { name: 'Lá', id: 'la', isBlack: false },
+            { name: 'Lá♯', id: 'la#', isBlack: true },
+            { name: 'Si', id: 'si', isBlack: false }
+        ];
+
+        const allAchievements = [
+            { id: 1, name: "Primeiros Passos", description: "Conclua a primeira tarefa.", xpRequirement: 100, icon: "images/achievements/achievement_primeiros_passos.jpg" },
+            { id: 2, name: "Mestre Iniciante", description: "Alcance 500 pontos.", xpRequirement: 500, icon: "images/achievements/achievement_mestre_iniciante.jpg" },
+            { id: 3, name: "Explorador", description: "Alcance 1000 pontos.", xpRequirement: 1000, icon: "images/achievements/achievement_explorador.jpg" },
+            { id: 4, name: "Aventureiro Nato", description: "Alcance 2000 pontos.", xpRequirement: 2000, icon: "images/achievements/achievement_aventureiro_nato.jpg" },
+            { id: 5, name: "Lenda Viva", description: "Alcance 5000 pontos.", xpRequirement: 5000, icon: "images/achievements/achievement_lenda_viva.jpg" },
+            { id: 6, name: "Conquistador", description: "Alcance 10000 pontos.", xpRequirement: 10000, icon: "images/achievements/achievement_conquistador.jpg" },
+            { id: 7, name: "Dedicado", description: "Alcance 20000 pontos.", xpRequirement: 20000, icon: "images/achievements/achievement_dedicado.jpg" }
+        ];
+
+        const elements = {
+            playerName: document.getElementById('playerName'),
+            startGame: document.getElementById('startGame'),
+            timer: document.getElementById('timer'),
+            score: document.getElementById('score'),
+            currentNote: document.getElementById('currentNote'),
+            pianoKeyboard: document.querySelector('.piano-keyboard'), 
+            noteButtons: document.querySelector('#noteButtons'), 
+            gameOverModal: document.getElementById('gameOverModal'),
+            finalScore: document.getElementById('finalScore'),
+            finalTime: document.getElementById('finalTime'),
+            playAgain: document.getElementById('playAgain'),
+            rankingModal: document.getElementById('rankingModal'),
+            rankingList: document.getElementById('rankingList'),
+            closeRanking: document.getElementById('closeRanking'),
+            finalPlayerName: document.getElementById('finalPlayerName'),
+            viewRankingFromModal: document.getElementById('viewRankingFromModal'),
+            backToStart: document.getElementById('backToStart')
+        };
+
+        function initGame() {
+            createPianoKeyboard();
+            createNoteButtons();
+            setupEventListeners();
+        }
+
+        function createPianoKeyboard() {
+            const pianoKeyboardContainer = elements.pianoKeyboard;
+            pianoKeyboardContainer.querySelectorAll('.key-label').forEach(label => label.remove());
+            pianoKeyboardContainer.querySelectorAll('.white-key, .black-key').forEach(key => {
+                key.classList.remove('pulse-animation', 'flash-red', 'flash-green', 'fast-flash-green');
+                key.style.border = '';
+            });
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                const noteName = key.dataset.note;
+                const existingLabel = key.querySelector('.key-label');
+                if (existingLabel) existingLabel.remove(); 
+            });
+        }
+
+        function createNoteButtons() {
+            elements.noteButtons.innerHTML = '';
+            
+            const noteOrder = [
+                'Dó', 'Ré', 'Mi',
+                'Fá', 'Sol', 'Lá',
+                'Si', 'Dó♯', 'Ré♯',
+                'Fá♯', 'Sol♯', 'Lá♯'
+            ];
+            
+            const shuffledNotes = [...notes].sort(() => Math.random() - 0.5);
+            
+            let notesForButtons = shuffledNotes.slice(0, 8); 
+            if (gameState.isPlaying && gameState.currentNote && !notesForButtons.some(n => n.name === gameState.currentNote)) {
+                const noteToReplaceIndex = Math.floor(Math.random() * notesForButtons.length);
+                notesForButtons[noteToReplaceIndex] = notes.find(n => n.name === gameState.currentNote);
+            }
+            
+            const remainingNotes = notes.filter(n => !notesForButtons.includes(n));
+            notesForButtons = notesForButtons.concat(remainingNotes.slice(0, 12 - notesForButtons.length));
+
+            notesForButtons.sort(() => Math.random() - 0.5);
+
+            notesForButtons.forEach(note => {
+                const button = document.createElement('button');
+                let colorClass = 'bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700';
+                
+                button.className = `note-button ${colorClass} text-white py-3 px-2 rounded-lg font-bold transition shadow-md w-full`;
+                button.textContent = note.name;
+                button.dataset.note = note.name;
+                
+                button.addEventListener('click', () => checkAnswer(note.name));
+                
+                elements.noteButtons.appendChild(button);
+            });
+        }
+
+        function setupEventListeners() {
+            elements.startGame.addEventListener('click', startGame);
+            elements.playAgain.addEventListener('click', resetGame);
+            elements.closeRanking.addEventListener('click', () => {
+                elements.rankingModal.classList.add('hidden');
+            });
+            elements.viewRankingFromModal.addEventListener('click', () => {
+                elements.gameOverModal.classList.add('hidden');
+                showRanking();
+            });
+            elements.backToStart.addEventListener('click', backToStart);
+            
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                key.addEventListener('click', () => {
+                    if (!gameState.isPlaying) return;
+                    const noteName = key.dataset.note;
+                    checkAnswer(noteName);
+                });
+            });
+        }
+
+        function startGame() {
+            const playerName = elements.playerName.value.trim();
+            if (!playerName) {
+                alert('Por favor, digite seu nome para começar!');
+                return;
+            }
+            
+            elements.currentNote.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+            
+            gameState.playerName = playerName;
+            gameState.isPlaying = true;
+            gameState.timer = 60;
+            gameState.score = 0;
+            gameState.currentPointsPerCorrect = 100;
+            gameState.playedNotes = [];
+            gameState.highlightedKey = null;
+            
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                const label = key.querySelector('.key-label');
+                if (label) {
+                    key.removeChild(label);
+                }
+                key.classList.remove('pulse-animation', 'flash-red', 'flash-green', 'fast-flash-green');
+                key.style.border = '';
+            });
+            
+            elements.timer.textContent = Math.floor(gameState.timer);
+            elements.score.textContent = gameState.score;
+            
+            gameState.timerInterval = setInterval(() => {
+                gameState.timer--;
+                elements.timer.textContent = Math.floor(gameState.timer);
+                
+                if (gameState.timer <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            nextRound();
+        }
+
+        function nextRound() {
+            if (gameState.highlightedKey) {
+                const prevKey = document.getElementById(gameState.highlightedKey.id);
+                if (prevKey) {
+                    prevKey.classList.remove('pulse-animation');
+                    prevKey.style.border = '';
+                }
+            }
+            
+            if (gameState.playedNotes.length === notes.length) {
+                gameState.playedNotes = [];
+                gameState.currentPointsPerCorrect += 50; 
+                document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                    const label = key.querySelector('.key-label');
+                    if (label) {
+                        key.removeChild(label);
+                    }
+                });
+            }
+            
+            const availableNotes = notes.filter(note => !gameState.playedNotes.includes(note.name));
+            const randomIndex = Math.floor(Math.random() * availableNotes.length);
+            const randomNote = availableNotes[randomIndex];
+            gameState.currentNote = randomNote.name;
+            gameState.highlightedKey = randomNote;
+            gameState.playedNotes.push(randomNote.name);
+            
+            elements.currentNote.textContent = '?';
+            
+            const keyElement = document.getElementById(randomNote.id);
+            if (keyElement) {
+                keyElement.classList.add('pulse-animation');
+                keyElement.style.border = '2px solid #FF6600';
+            }
+            
+            createNoteButtons();
+        }
+
+        function checkAnswer(selectedNote) {
+            if (!gameState.isPlaying) return;
+            
+            const keyElement = document.getElementById(gameState.highlightedKey.id);
+            
+            if (selectedNote === gameState.currentNote) {
+                gameState.score += gameState.currentPointsPerCorrect;
+                gameState.timer += 1.3; 
+                elements.score.textContent = gameState.score;
+                elements.timer.textContent = Math.floor(gameState.timer);
+                
+                keyElement.classList.remove('pulse-animation');
+                keyElement.classList.add('fast-flash-green');
+                if (keyElement && gameState.playedNotes.length <= notes.length) { 
+                    const label = document.createElement('div');
+                    label.className = 'key-label';
+                    label.textContent = gameState.currentNote;
+                    keyElement.appendChild(label);
+                }
+                
+                setTimeout(() => {
+                    keyElement.classList.remove('fast-flash-green');
+                    keyElement.style.border = '';
+                }, 400);
+                
+                setTimeout(() => {
+                    nextRound();
+                }, 200);
+            } else {
+                keyElement.classList.remove('pulse-animation');
+                keyElement.classList.add('flash-red');
+                
+                setTimeout(() => {
+                    keyElement.classList.remove('flash-red');
+                    keyElement.style.border = '2px solid #FF6600';
+                    keyElement.classList.add('pulse-animation');
+                }, 500);
+            }
+        }
+
+        function getEarnedAchievementsForScore(score) {
+            const earned = [];
+            allAchievements.forEach(achievement => {
+                if (score >= achievement.xpRequirement) {
+                    earned.push(achievement.id);
+                }
+            });
+            return earned;
+        }
+
+        function endGame() {
+            gameState.isPlaying = false;
+            clearInterval(gameState.timerInterval);
+            
+            if (gameState.highlightedKey) {
+                const keyElement = document.getElementById(gameState.highlightedKey.id);
+                if (keyElement) {
+                    keyElement.classList.remove('pulse-animation');
+                    keyElement.style.border = '';
+                }
+            }
+            
+            const finalTime = 60 - gameState.timer;
+            
+            elements.finalScore.textContent = gameState.score;
+            elements.finalTime.textContent = finalTime;
+            document.getElementById('finalPlayerName').textContent = gameState.playerName;
+            
+            const achievementsEarnedThisGame = getEarnedAchievementsForScore(gameState.score);
+
+            const newEntry = {
+                name: gameState.playerName,
+                score: gameState.score,
+                time: finalTime,
+                date: new Date().toLocaleDateString(),
+                achievements: achievementsEarnedThisGame };
+            
+            updateRanking(newEntry);
+            
+            elements.gameOverModal.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            elements.gameOverModal.classList.add('hidden');
+            elements.currentNote.textContent = '?';
+            
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                const label = key.querySelector('.key-label');
+                if (label) {
+                    key.removeChild(label);
+                }
+            });
+            
+            startGame();
+        }
+
+        function backToStart() {
+            elements.gameOverModal.classList.add('hidden');
+            elements.currentNote.textContent = '?';
+            gameState.isPlaying = false;
+            clearInterval(gameState.timerInterval);
+            if (gameState.highlightedKey) {
+                const keyElement = document.getElementById(gameState.highlightedKey.id);
+                if (keyElement) {
+                    keyElement.classList.remove('pulse-animation');
+                    keyElement.style.border = '';
+                }
+            }
+        }
+
+        function updateRanking(newEntry) {
+            const existingPlayerIndex = gameState.ranking.findIndex(entry => entry.name === newEntry.name);
+
+            if (existingPlayerIndex !== -1) {
+                const existingEntry = gameState.ranking[existingPlayerIndex];
+                
+                if (newEntry.score > existingEntry.score) {
+                    existingEntry.score = newEntry.score;
+                    existingEntry.time = newEntry.time;
+                    existingEntry.date = newEntry.date;
+                }
+                
+                newEntry.achievements.forEach(newAchId => {
+                    if (!existingEntry.achievements.includes(newAchId)) {
+                        existingEntry.achievements.push(newAchId);
+                    }
+                });
+                existingEntry.achievements.sort((a, b) => a - b);
+
+            } else {
+                gameState.ranking.push(newEntry);
+            }
+            
+            gameState.ranking.sort((a, b) => b.score - a.score);
+            
+            if (gameState.ranking.length > 10) {
+                gameState.ranking = gameState.ranking.slice(0, 10);
+            }
+            
+            localStorage.setItem('pianoGameRanking', JSON.stringify(gameState.ranking));
+        }
+        function showRanking() {
+            elements.rankingList.innerHTML = '';
+            
+            if (gameState.ranking.length === 0) {
+                elements.rankingList.innerHTML = '<p class="text-center py-4">Nenhum registro ainda.</p>';
+            } else {
+                gameState.ranking.forEach((entry, index) => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'flex justify-between items-center py-2 border-b border-gray-400';
+                    
+                    const positionAndName = document.createElement('span');
+                    positionAndName.className = 'font-bold text-[#4B2E2E] flex items-center gap-2';
+                    
+                    let medalIcon = '';
+                    if (index === 0) medalIcon = '🥇';
+                    else if (index === 1) medalIcon = '🥈';
+                    else if (index === 2) medalIcon = '🥉';
+                    
+                    positionAndName.innerHTML = `${medalIcon} ${index + 1}º - ${entry.name}:`;
+                    
+                    const scoreAndAchievements = document.createElement('div');
+                    scoreAndAchievements.className = 'flex items-center gap-2';
+
+                    const scoreElement = document.createElement('span');
+                    scoreElement.className = 'font-bold text-[#4B2E2E]';
+                    scoreElement.textContent = `${entry.score} pontos`;
+                    scoreAndAchievements.appendChild(scoreElement);
+
+                    if (entry.achievements && entry.achievements.length > 0) {
+                        entry.achievements.forEach(achId => {
+                            const achievement = allAchievements.find(a => a.id === achId);
+                            if (achievement) {
+                                const img = document.createElement('img');
+                                img.src = achievement.icon;
+                                img.alt = achievement.name;
+                                img.title = achievement.name; 
+                                img.className = 'w-6 h-6 rounded-full border border-gray-300'; 
+                                scoreAndAchievements.appendChild(img);
+                            }
+                        });
+                    }
+                    
+                    entryElement.appendChild(positionAndName);
+                    entryElement.appendChild(scoreAndAchievements);
+                    elements.rankingList.appendChild(entryElement);
+                });
+            }
+            
+            elements.rankingModal.classList.remove('hidden');
+        }
+
+        function resetRanking() {
+            gameState.ranking = [];
+            localStorage.setItem('pianoGameRanking', JSON.stringify([]));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initGame();
+        });
+    </script>
+</body>
+</html>
